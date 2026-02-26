@@ -180,7 +180,8 @@ public class NConfig
         starvationSoundThreshold,
         starvationSoundInterval,
         // Localization
-        language
+        language,
+        stockpiletransferprop
     }
 
     public enum BBDisplayMode
@@ -900,6 +901,9 @@ public class NConfig
                                 break;
                             case "NCarrierProp":
                                 res.add(new NCarrierProp(obj));
+                                break;
+                            case "NStockpileTransferProp":
+                                res.add(new NStockpileTransferProp(obj));
                                 break;
                             case "QuickActionPreset":
                                 res.add(new QuickActionPreset(obj));

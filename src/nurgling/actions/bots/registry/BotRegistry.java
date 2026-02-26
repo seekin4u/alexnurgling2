@@ -222,6 +222,7 @@ public class BotRegistry {
         bots.add(new BotDescriptor("zoneminer", BotDescriptor.BotType.UTILS, "Mine in area", "Mine rocks in the area.", false, true, MineAction.class, "zoneminer", true));
         bots.add(new BotDescriptor("bed", BotDescriptor.BotType.UTILS, "Go to bed", "Go to any free bed in a bed area nearby.", true, false, Sleep.class, "bed", false));
         bots.add(new BotDescriptor("soil", BotDescriptor.BotType.UTILS, "Create piles with soil", "Create piles with soil in area.", false, true, CreateSoilPiles.class, "soil", false));
+        bots.add(new BotDescriptor("transfer_stockpiles", BotDescriptor.BotType.UTILS, "Transfer Stockpiles", "Moves stockpile contents from one area to another.", false, true, TransferStockpiles.class, "transfer_stockpiles", false));
         bots.add(new BotDescriptor("destroy", BotDescriptor.BotType.UTILS, "Destroyer", "Destroy objects in area.", false, true, Destroyer.class, "destroy", false));
         bots.add(new BotDescriptor("destroytrellisplants", BotDescriptor.BotType.UTILS, "Destroy Trellis Plants", "Destroys all trellis plants in selected area.", false, true, DestroyTrellisPlants.class, "trellis_cleaner", false));
         bots.add(new BotDescriptor("flag", BotDescriptor.BotType.UTILS, "Survey Supporter", "Survey Supporter.", false, true, SurveySupport.class, "flag", false));
