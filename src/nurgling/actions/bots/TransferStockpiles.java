@@ -1,7 +1,6 @@
 package nurgling.actions.bots;
 
 import haven.*;
-import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NISBox;
 import nurgling.NUtils;
@@ -16,7 +15,6 @@ import nurgling.tools.StockpileUtils;
 import nurgling.widgets.bots.StockpileTransferWnd;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class TransferStockpiles implements Action {
 
@@ -50,113 +48,58 @@ public class TransferStockpiles implements Action {
                 Resource.loadsimg("baubles/outputArea"));
         NArea whereArea = context.getAreaById(whereId);
 
-        NAlias pileAlias = new NAlias(prop.pileResName);
         NAlias itemAlias = new NAlias(prop.itemAlias);
 
-		ArrayList<Gob> gobs;
-		HashSet<String> targets = new HashSet<>();
-		while(!(gobs = Finder.findGobs(fromArea, new NAlias("stockpile"))).isEmpty())
-		{
-			for (Gob pile : gobs) {
-				if(PathFinder.isAvailable(pile))
-				{
-					Coord size = StockpileUtils.itemMaxSize.get(pile.ngob.name);
-					new PathFinder(pile).run(gui);
-					new OpenTargetContainer("Stockpile", pile).run(gui);
-					int target_size = 0;
-					while (Finder.findGob(pile.id) != null)
-					{
-						if (NUtils.getGameUI().getInventory().getNumberFreeCoord((size != null) ? size : new Coord(1, 1)) > 0)
-						{
-							NISBox spbox = gui.getStockpile();
-							if (spbox != null)
-							{
-								do {
-									if (Finder.findGob(pile.id) == null && target_size != 0)
-										break;
-									target_size = NUtils.getGameUI().getInventory().getNumberFreeCoord((size != null) ? size : new Coord(1, 1));
-									if (target_size == 0) {
-										new FreeInventory2(context).run(gui);
-										context.navigateToAreaIfNeeded(whereId);
-										targets.clear();
-										if (Finder.findGob(pile.id) != null)
-										{
-											new PathFinder(pile).run(gui);
-											new OpenTargetContainer("Stockpile", pile).run(gui);
-										} else break;
-									} else {
-										TakeItemsFromPile tifp = new TakeItemsFromPile(pile, spbox, target_size);
-										tifp.run(gui);
-										for (NGItem item : tifp.newItems())
-											targets.add((item).name());
-									}
-								}
-								while (target_size != 0);
-							}
-						} else {
-							new FreeInventory2(context).run(gui);
-							context.navigateToAreaIfNeeded(whereId);
-							if (Finder.findGob(pile.id) != null) {
-								new PathFinder(pile).run(gui);
-								new OpenTargetContainer("Stockpile", pile).run(gui);
-							}
-						}
-						context.navigateToAreaIfNeeded(whereId);
-					}
-				}
-			}
-		}
-
-//        ArrayList<Gob> piles;
-//        while (!(piles = Finder.findGobs(fromArea, pileAlias)).isEmpty()) {
-//            // Filter to reachable piles
-//            ArrayList<Gob> reachable = new ArrayList<>();
-//            for (Gob pile : piles) {
-//                if (PathFinder.isAvailable(pile))
-//                    reachable.add(pile);
-//            }
-//            if (reachable.isEmpty()) {
-//                NUtils.getGameUI().msg("Can't reach any pile in the from area, stopping.");
-//                break;
-//            }
-//
-//            reachable.sort(NUtils.d_comp);
-//            Gob targetPile = reachable.get(0);
-//
-//            // Navigate to and open the stockpile
-//            new PathFinder(targetPile, false).run(gui);
-//            new OpenTargetContainer("Stockpile", targetPile).run(gui);
-//
-//            if (gui.getStockpile() == null) {
-//                NUtils.getGameUI().msg("Failed to open stockpile, skipping.");
-//                continue;
-//            }
-//
-////            if (gui.getStockpile().calcCount() == 0) {
-////                new CloseTargetWindow(gui.getStockpile()).run(gui);
-////                continue;
-////            }
-//
-//            // Take items into inventory
-//            new TakeItemsFromPile(targetPile, gui.getStockpile(), Integer.MAX_VALUE).run(gui);
-//
-//            // Close the stockpile window if still open
-////            if (gui.getStockpile() != null)
-////                new CloseTargetWindow(gui.getStockpile()).run(gui);
-//
-//            // Check if we got anything
-//            if (gui.getInventory().getItems(itemAlias).isEmpty())
-//                continue;
-//
-//            // Navigate to output area and place items into new piles
-//            NUtils.navigateToArea(whereArea);
-//            new CreateFreePiles(whereArea.getRCArea(), itemAlias,
-//                    new NAlias(prop.pileResName)).run(gui);
-//
-//            // Navigate back to input area for next iteration
-//            NUtils.navigateToArea(fromArea);
-//        }
+        ArrayList<Gob> gobs;
+        while (!(gobs = Finder.findGobs(fromArea, new NAlias("stockpile"))).isEmpty()) {
+            for (Gob pile : gobs) {
+                if (PathFinder.isAvailable(pile)) {
+                    Coord size = StockpileUtils.itemMaxSize.get(pile.ngob.name);
+                    new PathFinder(pile).run(gui);
+                    new OpenTargetContainer("Stockpile", pile).run(gui);
+                    int target_size = 0;
+                    while (Finder.findGob(pile.id) != null) {
+                        if (getFreeSlots(gui, itemAlias, size) > 0) {
+                            NISBox spbox = gui.getStockpile();
+                            if (spbox != null) {
+                                do {
+                                    if (Finder.findGob(pile.id) == null && target_size != 0)
+                                        break;
+                                    target_size = getFreeSlots(gui, itemAlias, size);
+                                    if (target_size == 0) {
+                                        new TransferToPiles(whereArea.getRCArea(), itemAlias).run(gui);
+                                        if (Finder.findGob(pile.id) != null) {
+                                            new PathFinder(pile).run(gui);
+                                            new OpenTargetContainer("Stockpile", pile).run(gui);
+                                        } else break;
+                                    } else {
+                                        new TakeItemsFromPile(pile, spbox, target_size).run(gui);
+                                    }
+                                } while (target_size != 0);
+                            }
+                        } else {
+                            new TransferToPiles(whereArea.getRCArea(), itemAlias).run(gui);
+                            if (Finder.findGob(pile.id) != null) {
+                                new PathFinder(pile).run(gui);
+                                new OpenTargetContainer("Stockpile", pile).run(gui);
+                            }
+                        }
+                        context.navigateToAreaIfNeeded(fromId);
+                    }
+                }
+            }
+        }
 
         return Results.SUCCESS();
     }
+
+    private int getFreeSlots(NGameUI gui, NAlias itemAlias, Coord fallback) throws InterruptedException {
+        ArrayList<WItem> items = null;
+        if (items.isEmpty())
+            items = gui.getInventory().getItems();
+        if (!items.isEmpty())
+            return gui.getInventory().getNumberFreeCoord(items.get(0));
+        return gui.getInventory().getNumberFreeCoord(fallback != null ? fallback : new Coord(1, 1));
+    }
+
 }
