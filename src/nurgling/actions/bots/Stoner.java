@@ -34,7 +34,6 @@ public class Stoner implements Action  {
 			}
 		}
 		gui.msg("milestones: " + milestones.size());
-
 		for (String hash : milestones) {
 			Gob gob = Finder.findGob(hash);
 			if (gob == null) continue;
@@ -80,14 +79,14 @@ public class Stoner implements Action  {
 
 				NUtils.addTask(new WaitForGobsWithNAlias(new NAlias("roadball")));
 				Gob roadball = Finder.findGobAnywhere(new NAlias("roadball"));
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 				if (roadball != null) {
 					Gob fish = Finder.findGobAnywhere(new NAlias("caveangler"));
 					if(fish != null){
 						gui.msg("There is a caveangler");
 						NDiscordNotification discordSettings = NDiscordNotification.get("general");
 						if (discordSettings != null && discordSettings.webhookUrl != null && !discordSettings.webhookUrl.isEmpty()) {
-							gui.msgToDiscord(discordSettings, "Test message, bto found a caveangler");
+							gui.msgToDiscord(discordSettings, "Gnome [" + gui.chrid + "] found a caveangler.");
 						}
 					}
 					NUtils.rclick(roadball.rc);
