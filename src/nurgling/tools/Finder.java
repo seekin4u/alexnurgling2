@@ -684,6 +684,18 @@ public class Finder
         return result;
     }
 
+    public static Gob findGobAnywhere(NAlias alias) {
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                if (!(gob instanceof OCache.Virtual || gob.attr.isEmpty() || gob.getClass().getName().contains("GlobEffector"))) {
+                    if (gob.ngob != null && gob.ngob.name != null && NParser.checkName(gob.ngob.name, alias))
+                        return gob;
+                }
+            }
+        }
+        return null;
+    }
+
     public static Gob findGob(String hash) {
         synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
             for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
