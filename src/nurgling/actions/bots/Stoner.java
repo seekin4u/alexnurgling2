@@ -2,6 +2,7 @@ package nurgling.actions.bots;
 
 import haven.Button;
 import haven.Gob;
+import haven.Label;
 import haven.Resource;
 import haven.Widget;
 import nurgling.NGameUI;
@@ -53,12 +54,6 @@ public class Stoner implements Action  {
 			}
 			gui.msg("There are " + travelButtons.size() + " Travel buttons");
 
-//			for(Button tb : travelButtons){
-//				tb.click();
-//				Thread.sleep(6000);//change to callback
-//				Gob roadball = Finder.findGobAnywhere(new NAlias("roadball"));
-//				if (roadball != null) NUtils.rclick(roadball.rc);
-//			}
 			for (int i = 0; i < travelButtons.size(); i++) {
 				if (!(new OpenTargetWindow("Milestone", gob).run(gui).IsSuccess()))
 					return Results.FAIL();
@@ -71,8 +66,16 @@ public class Stoner implements Action  {
 					if (btn.text != null && "Travel".equals(btn.text.text))
 						freshTravel.add(btn);
 				}
+
+				FindWidget reFindLabels = new FindWidget("Milestone", "lbl");
+				NUtils.addTask(reFindLabels);
+				ArrayList<Label> freshLabels = new ArrayList<>();
+				for (Widget w : reFindLabels.getResult())
+					freshLabels.add((Label) w);
+
 				if (i >= freshTravel.size()) break;
 
+				String roadLabel = (i < freshLabels.size()) ? freshLabels.get(i).texts : "";
 				Button toClick = freshTravel.get(i);
 				int wdgid = toClick.wdgid();
 				toClick.click();
@@ -86,7 +89,7 @@ public class Stoner implements Action  {
 						gui.msg("There is a caveangler");
 						NDiscordNotification discordSettings = NDiscordNotification.get("general");
 						if (discordSettings != null && discordSettings.webhookUrl != null && !discordSettings.webhookUrl.isEmpty()) {
-							gui.msgToDiscord(discordSettings, "Gnome [" + gui.chrid + "] found a caveangler.");
+							gui.msgToDiscord(discordSettings, "Gnome [" + gui.chrid + "] found a caveangler on road: " + roadLabel);
 						}
 					}
 					NUtils.rclick(roadball.rc);
