@@ -3,13 +3,10 @@ package nurgling.actions.bots;
 import haven.Button;
 import haven.Gob;
 import haven.Label;
-import haven.Resource;
 import haven.Widget;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.actions.*;
-import nurgling.areas.NArea;
-import nurgling.areas.NContext;
 import nurgling.conf.NDiscordNotification;
 import nurgling.tasks.FindWidget;
 import nurgling.tasks.WaitForGobsWithNAlias;
@@ -22,14 +19,8 @@ import java.util.ArrayList;
 public class Stoner implements Action  {
 	@Override
 	public Results run(NGameUI gui) throws InterruptedException {
-		NContext context = new NContext(gui);
-
-		String milestone_area = context.createArea("Please select area to check milestones", Resource.loadsimg("baubles/chopperArea"));
-
-		NArea selectedArea = context.getAreaById(milestone_area);
-
 		ArrayList<String> milestones = new ArrayList<>();
-		for (Gob cc : Finder.findGobs(selectedArea, new NAlias("gfx/terobjs/road/milestone-stone-e"))) {
+		for (Gob cc : Finder.findGobs(new NAlias("gfx/terobjs/road/milestone-stone-e"))) {
 			if (cc.ngob != null && cc.ngob.hash != null) {
 				milestones.add(cc.ngob.hash);
 			}
