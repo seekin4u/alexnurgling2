@@ -251,7 +251,7 @@ public class SeedCrop implements Action {
             } else {
                 NUtils.getGameUI().map.wdgmsg("sel", area.br, area.ul, 1);
             }
-            NUtils.getUI().core.addTask(new WaitGobsInField(area, total));
+            NUtils.getUI().core.addTask(new WaitGobsInField(area, total, 300));
 
             if (!barrels.isEmpty()) {
                 NUtils.getUI().core.addTask(new WaitAnotherAmount(NUtils.getGameUI().getInventory(), iseed, stacks_size));

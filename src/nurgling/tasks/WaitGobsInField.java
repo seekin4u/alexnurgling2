@@ -14,6 +14,14 @@ public class WaitGobsInField extends NTask
         this.count = count;
     }
 
+    public WaitGobsInField(Area area, int count, int timeoutTicks)
+    {
+        this.area = area;
+        this.count = count;
+        this.infinite = false;
+        this.maxCounter = timeoutTicks;
+    }
+
     @Override
     public boolean check()
     {
