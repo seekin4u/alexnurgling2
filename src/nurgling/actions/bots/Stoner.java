@@ -91,7 +91,8 @@ public class Stoner implements Action  {
 			}
 
 		}
-
+		Thread.sleep(5000);
+		System.exit(0);
 		return null;
 	}
 }

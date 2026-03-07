@@ -203,6 +203,7 @@ public class BotRegistry {
 
         // UTILS
         bots.add(new BotDescriptor("equipment_bot", BotDescriptor.BotType.UTILS, "Equipment Bot", "Equip items from a saved preset.", true, false, EquipmentBot.class, "shieldsword", false));
+        bots.add(new BotDescriptor("milestoner", BotDescriptor.BotType.UTILS, "Milestoner", "Equip items from a saved preset.", true, false, Stoner.class, "test3", false));
         bots.add(new BotDescriptor("shieldsword", BotDescriptor.BotType.UTILS, "Equip Shield/Sword", "Equips shield and sword.", true, true, EquipShieldSword.class, "shieldsword", false));
         bots.add(new BotDescriptor("filwater", BotDescriptor.BotType.UTILS, "Fill Waterskins (Select Zone)", "Fills waterskins - always prompts to select water zone.", false, true, FillWaterskins.class, "filwater", false));
         bots.add(new BotDescriptor("filwaterzone", BotDescriptor.BotType.UTILS, "Fill Waterskins (Global Zone)", "Fills waterskins using global water zone with chunk navigation.", true, true, FillWaterskinsGlobal.class, "filwaterzone", false));
@@ -257,7 +258,7 @@ public class BotRegistry {
         bots.add(new BotDescriptor("crate", BotDescriptor.BotType.BUILD, "Build Crate", "Builds crates.", false, true, BuildCrate.class, "crate", true));
 
         // TOOLS (for debug)
-        bots.add(new BotDescriptor("test1", BotDescriptor.BotType.TOOLS, "Test 1", "Debug test 1.", false, true, Stoner.class, "test1", false));
+        bots.add(new BotDescriptor("test1", BotDescriptor.BotType.TOOLS, "Test 1", "Debug test 1.", true, true, Stoner.class, "test1", false));
         bots.add(new BotDescriptor("test2", BotDescriptor.BotType.TOOLS, "Show Active Tasks", "Shows all active tasks in NCore.", false, true, TESTShowActiveTasks.class, "test2", false));
         bots.add(new BotDescriptor("test4", BotDescriptor.BotType.TOOLS, "Test 4", "Debug test 4.", false, true, TESTbranchinvtransferpacks.class, "test4", false));
         bots.add(new BotDescriptor("test5", BotDescriptor.BotType.TOOLS, "Test 5", "Auxiliary deferred callback iterator for async reference validation.", false, true, TESTAuxIterProc.class, "test5", false));
