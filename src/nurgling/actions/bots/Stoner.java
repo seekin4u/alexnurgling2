@@ -19,6 +19,9 @@ import java.util.ArrayList;
 public class Stoner implements Action  {
 	@Override
 	public Results run(NGameUI gui) throws InterruptedException {
+		java.time.LocalDateTime now = java.time.LocalDateTime.now();
+		log("Starting at " + now.toString());
+
 		ArrayList<String> milestones = new ArrayList<>();
 		for (Gob cc : Finder.findGobs(new NAlias("gfx/terobjs/road/milestone-stone-e"))) {
 			if (cc.ngob != null && cc.ngob.hash != null) {
@@ -74,6 +77,7 @@ public class Stoner implements Action  {
 				String roadLabel = (i < freshLabels.size()) ? freshLabels.get(i).texts : "";
 				Button toClick = freshTravel.get(i);
 				int wdgid = toClick.wdgid();
+				log("Clicking travel button ");
 				toClick.click();
 
 				NUtils.addTask(new WaitForGobsWithNAlias(new NAlias("roadball")));
@@ -87,8 +91,10 @@ public class Stoner implements Action  {
 						NDiscordNotification discordSettings = NDiscordNotification.get("general");
 						if (discordSettings != null && discordSettings.webhookUrl != null && !discordSettings.webhookUrl.isEmpty()) {
 							log("Sending discord notification");
-							gui.msgToDiscord(discordSettings, "Gnome [" + gui.chrid + "] found a caveangler on road: " + roadLabel);
+							gui.msgToDiscord(discordSettings, "Bot [" + gui.chrid + "] found a caveangler on road: " + roadLabel + "<@&1479929946666176554>");
 						}
+					} else {
+						log("No fish found in " + roadLabel);
 					}
 					NUtils.rclick(roadball.rc);
 				}
@@ -97,6 +103,7 @@ public class Stoner implements Action  {
 			}
 		}
 		Thread.sleep(5000);
+		log("Exiting the client");
 		System.exit(0);
 		return null;
 	}
