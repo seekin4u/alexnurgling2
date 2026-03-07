@@ -25,13 +25,15 @@ public class Stoner implements Action  {
 				milestones.add(cc.ngob.hash);
 			}
 		}
-		gui.msg("milestones: " + milestones.size());
+		gui.msg("There are " + milestones.size() + " milestones");
+		log("There are " + milestones.size() + " milestones");
 		for (String hash : milestones) {
 			Gob gob = Finder.findGob(hash);
 			if (gob == null) continue;
 
 			new PathFinder(gob).run(gui);
 			if (!(new OpenTargetWindow("Milestone", gob).run(gui).IsSuccess())) {
+				log("Wasn't able to open milestone window to count buttons");
 				return Results.FAIL();
 			}
 
@@ -44,10 +46,13 @@ public class Stoner implements Action  {
 					travelButtons.add(btn);
 			}
 			gui.msg("There are " + travelButtons.size() + " Travel buttons");
+			log("There are " + travelButtons.size() + " Travel buttons");
 
 			for (int i = 0; i < travelButtons.size(); i++) {
-				if (!(new OpenTargetWindow("Milestone", gob).run(gui).IsSuccess()))
+				if (!(new OpenTargetWindow("Milestone", gob).run(gui).IsSuccess())){
+					log("Wasn't able to open milestone window to travel");
 					return Results.FAIL();
+				}
 
 				FindWidget reFindBtns = new FindWidget("Milestone", "btn");
 				NUtils.addTask(reFindBtns);
@@ -78,21 +83,25 @@ public class Stoner implements Action  {
 					Gob fish = Finder.findGobAnywhere(new NAlias("caveangler"));
 					if(fish != null){
 						gui.msg("There is a caveangler");
+						log("There is a caveangler");
 						NDiscordNotification discordSettings = NDiscordNotification.get("general");
 						if (discordSettings != null && discordSettings.webhookUrl != null && !discordSettings.webhookUrl.isEmpty()) {
+							log("Sending discord notification");
 							gui.msgToDiscord(discordSettings, "Gnome [" + gui.chrid + "] found a caveangler on road: " + roadLabel);
 						}
 					}
 					NUtils.rclick(roadball.rc);
 				}
-
 				final int id = wdgid;
 				travelButtons.removeIf(b -> b.wdgid() == id);
 			}
-
 		}
 		Thread.sleep(5000);
 		System.exit(0);
 		return null;
+	}
+
+	private static void log(String message) {
+		System.out.println("[Stoner] " + message);
 	}
 }
