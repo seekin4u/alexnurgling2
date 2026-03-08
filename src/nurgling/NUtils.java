@@ -862,6 +862,70 @@ public class NUtils
         return false;
     }
 
+    private static Polity getVillagePolity() {
+        NGameUI gui = getGameUI();
+        if(gui == null)
+            return null;
+        for(Polity p : gui.polities) {
+            if(p.cap.equals("Village"))
+                return p;
+        }
+        return null;
+    }
+
+    private static Polity getRealmPolity() {
+        NGameUI gui = getGameUI();
+        if(gui == null)
+            return null;
+        for(Polity p : gui.polities) {
+            if(!p.cap.equals("Village"))
+                return p;
+        }
+        return null;
+    }
+
+    public static boolean isInVillage() {
+        return getVillagePolity() != null;
+    }
+
+    public static boolean isInKingdom() {
+        return getRealmPolity() != null;
+    }
+
+    public static int getVillageAuth() {
+        Polity p = getVillagePolity();
+        return p != null ? p.auth : -1;
+    }
+
+    public static int getVillageAuthCap() {
+        Polity p = getVillagePolity();
+        return p != null ? p.acap : -1;
+    }
+
+    public static int getKingdomAuth() {
+        Polity p = getRealmPolity();
+        return p != null ? p.auth : -1;
+    }
+
+    public static int getKingdomAuthCap() {
+        Polity p = getRealmPolity();
+        return p != null ? p.acap : -1;
+    }
+
+    public static double getVillageAuthRatio() {
+        Polity p = getVillagePolity();
+        if(p == null || p.acap == 0)
+            return -1;
+        return (double) p.auth / p.acap;
+    }
+
+    public static double getKingdomAuthRatio() {
+        Polity p = getRealmPolity();
+        if(p == null || p.acap == 0)
+            return -1;
+        return (double) p.auth / p.acap;
+    }
+
     public static String getDataFile(String... pathElements){
         Path path = getDataFilePath(pathElements);
         return path.toString();
