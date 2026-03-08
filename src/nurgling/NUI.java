@@ -6,6 +6,7 @@ import nurgling.widgets.*;
 
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -284,6 +285,10 @@ public class NUI extends UI
             }
         }
         return id;
+    }
+
+    public Collection<Widget> getWidgets() {
+        return rwidgets.keySet();
     }
 
     /**

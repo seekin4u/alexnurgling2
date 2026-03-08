@@ -866,6 +866,100 @@ public class NUtils
         return false;
     }
 
+    private static Polity getVillagePolity() {
+        NGameUI gui = getGameUI();
+        if(gui == null)
+            return null;
+        for(Polity p : gui.polities) {
+            if(p.cap.equals("Village"))
+                return p;
+        }
+        return null;
+    }
+
+    private static Polity getRealmPolity() {
+        NGameUI gui = getGameUI();
+        if(gui == null)
+            return null;
+        for(Polity p : gui.polities) {
+            if(!p.cap.equals("Village"))
+                return p;
+        }
+        return null;
+    }
+
+    public static boolean isInVillage() {
+        return getVillagePolity() != null;
+    }
+
+    public static boolean isInKingdom() {
+        return getRealmPolity() != null;
+    }
+
+    public static int getVillageAuth() {
+        Polity p = getVillagePolity();
+        return p != null ? p.auth : -1;
+    }
+
+    public static int getVillageAuthCap() {
+        Polity p = getVillagePolity();
+        return p != null ? p.acap : -1;
+    }
+
+    public static int getKingdomAuth() {
+        Polity p = getRealmPolity();
+        return p != null ? p.auth : -1;
+    }
+
+    public static int getKingdomAuthCap() {
+        Polity p = getRealmPolity();
+        return p != null ? p.acap : -1;
+    }
+
+    public static double getVillageAuthRatio() {
+        Polity p = getVillagePolity();
+        if(p == null || p.acap == 0)
+            return -1;
+        return (double) p.auth / p.acap;
+    }
+
+    public static double getKingdomAuthRatio() {
+        Polity p = getRealmPolity();
+        if(p == null || p.acap == 0)
+            return -1;
+        return (double) p.auth / p.acap;
+    }
+
+    public static List<Widget> getChildren(Collection<Widget> widgets) {
+        List<Widget> result = new ArrayList<>();
+        for(Widget w : widgets) {
+            for(Widget child = w.child; child != null; child = child.next)
+                result.add(child);
+        }
+        return result;
+    }
+
+    public static boolean activateWindow(String name) {
+        NUI ui = getUI();
+        if(ui == null)
+            return false;
+		Collection<Widget> list = ui.getWidgets();
+		List<Widget> children = NUtils.getChildren(list);
+		for(Widget w : children) {
+            if(!(w instanceof Window))
+                continue;
+            if(!name.equals(((Window) w).cap))
+                continue;
+            for(Widget btn = w.child; btn != null; btn = btn.next) {
+                if(btn instanceof Button) {
+                    btn.wdgmsg("activate");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String getDataFile(String... pathElements){
         Path path = getDataFilePath(pathElements);
         return path.toString();

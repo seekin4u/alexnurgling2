@@ -125,6 +125,7 @@ public class NCharlist extends Charlist {
                 if(c.name.equals(NConfig.botmod.character)) {
                     instance.wdgmsg("play", NConfig.botmod.character);
                     instance = null;
+					NUtils.activateWindow("Restart");
                     break;
                 }
             }
